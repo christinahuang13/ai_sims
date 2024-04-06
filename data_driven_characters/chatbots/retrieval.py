@@ -27,10 +27,12 @@ class RetrievalChatBot:
         self.documents_2 = documents_2
         self.num_context_memories = 10
         # true if character1, false if character2
-        self.current = True
+        self.current = False
         self.chat_history_key = "chat_history"
+        self.chat_history_key_2 = "chat_history_2"
         self.context_key = "context"
         self.input_key = "input"
+        self.last_response = "Hey there, nice to meet you! I'm Evelyn, and I'm always up for a good adventure. Ready to take on the universe together?"
 
         self.chain_1 = self.create_chain(character_definition, character_definition_2, documents)
         self.chain_2 = self.create_chain(character_definition_2, character_definition, documents_2)
@@ -63,26 +65,24 @@ class RetrievalChatBot:
         memory = CombinedMemory(memories=[conv_memory, context_memory])
         prompt = PromptTemplate.from_template(
             f"""Your name is {character_definition.name}.
+                You will have a conversation with another fictional character and you will engage in a dialogue with them.
+                You will exaggerate your personality, interests, desires, emotions, and other traits.
+                You will stay in character as {character_definition.name} throughout the conversation, even if the character asks you questions that you don't know the answer to.
+                You will not break character as {character_definition.name}.
 
+                You are {character_definition.name} in the following story snippets, which describe events in your life.
+                ---
+                {{{self.context_key}}}
+                ---
 
-You will have a conversation with another fictional character, {character_definition_2.name}, and you will engage in a dialogue with them.
-You will exaggerate your personality, interests, desires, emotions, and other traits.
-You will stay in character as {character_definition.name} throughout the conversation, even if the {character_definition_2.name} asks you questions that you don't know the answer to.
-You will not break character as {character_definition.name}.
+                Current conversation:
+                ---
+                {character_definition.name}: {character_definition.greeting}
+                {{{self.chat_history_key}}}
+                ---
 
-You are {character_definition.name} in the following story snippets, which describe events in your life.
----
-{{{self.context_key}}}
----
-
-Current conversation:
----
-{character_definition.name}: {character_definition.greeting}
-{{{self.chat_history_key}}}
----
-
-{character_definition_2.name}: {character_definition_2.greeting}
-{character_definition.name}:"""
+                Character: {{{self.input_key}}}
+                {character_definition_2.name}:"""
         )
         GPT3 = ChatAnthropic(temperature=0, model_name="claude-3-opus-20240229")
         chatbot = ConversationChain(
@@ -93,10 +93,16 @@ Current conversation:
     def greet(self):
         return self.character_definition.greeting
 
-    def step(self, input, is_user=True):
-        if not is_user:
-            self.current = not self.current
-            # change to last convo
-            return self.chain_1.run(input=input) if self.current else self.chain_2.run(input=input)
+    def step(self, input, is_user):
+        # self.current = not self.current
+        #if not is_user:
+        self.current = not self.current
+        print(self.current)
+        print(is_user)
+        print("HELLO WORLDDDD")
+        # change to last convo
+        new_last_response = self.chain_1.run(input=self.last_response) if self.current else self.chain_2.run(input=self.last_response)
+        self.last_response = new_last_response
+        return new_last_response
 
-        return self.chain_1.run(input=input) if self.current else self.chain_2.run(input=input)
+        #return self.chain_1.run(input=input) if self.current else self.chain_2.run(input=input)

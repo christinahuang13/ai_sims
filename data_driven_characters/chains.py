@@ -69,13 +69,13 @@ Your revision should be in {perspective}.
 
     @root_validator(pre=True)
     def check_character_range(cls, values):
-        character_range = values.get("character_range")
-        if character_range[0] >= character_range[1]:
-            raise ValueError(
-                "first element of character_range should be lower than the second element"
-            )
-        if character_range[0] < 0 or character_range[1] < 0:
-            raise ValueError("both elements of character_range should be non-negative")
+        # character_range = values.get("character_range")
+        # if character_range[0] >= character_range[1]:
+        #     raise ValueError(
+        #         "first element of character_range should be lower than the second element"
+        #     )
+        # if character_range[0] < 0 or character_range[1] < 0:
+        #     raise ValueError("both elements of character_range should be non-negative")
 
         return values
 

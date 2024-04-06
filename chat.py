@@ -37,7 +37,7 @@ def create_chatbot(corpus, corpus2, character_name, character_name_2, chatbot_ty
     # load docs
     docs = load_docs(corpus_path=corpus, chunk_size=2048, chunk_overlap=64)
     docs_2 = load_docs(corpus_path=corpus2, chunk_size=2048, chunk_overlap=64)
-    
+
     # generate summaries
     corpus_summaries = get_corpus_summaries(
         docs=docs, summary_type=summary_type, cache_dir=summaries_dir
@@ -56,7 +56,7 @@ def create_chatbot(corpus, corpus2, character_name, character_name_2, chatbot_ty
     character_definition_2 = get_character_definition(
         name=character_name_2,
         corpus_summaries=corpus_summaries_2,
-        cache_dir=character_definitions_dir,
+        cache_dir=character_definitions_dir_2,
     )
     print(json.dumps(asdict(character_definition), indent=4))
     print(json.dumps(asdict(character_definition_2), indent=4))

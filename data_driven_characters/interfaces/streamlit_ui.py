@@ -40,10 +40,10 @@ def converse(chatbot):
 
     # the new message
     if user_input:
-        if user_input == "next":
-            print("TRIGGER RESPONSE")
-            print(response)
-            response = chatbot.step(user_input, false)
+        # if user_input == "next":
+        #     response = chatbot.step(user_input, False)
+        #     print("ICECREAM")
+        #     print(response)
 
 
         key = len(st.session_state.messages)
@@ -55,9 +55,9 @@ def converse(chatbot):
             }
         )
         message(user_input, is_user=True, key=key)
-        with st.spinner(f"{chatbot.character_definition.name} is thinking..."):
-            response = chatbot.step(user_input, true)
-            print("ICECREAM")
+        with st.spinner(f"They are thinking..."):
+            response, character = chatbot.step(user_input, True)
+            print("ICECREAMRESPONSE")
             print(response)
         key = len(st.session_state.messages)
         st.session_state.messages.append(
