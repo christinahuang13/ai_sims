@@ -23,21 +23,27 @@ OUTPUT_ROOT = "output"
 def create_chatbot(corpus, corpus2, character_name, character_name_2, chatbot_type, retrieval_docs, summary_type):
     # logging
     corpus_name = os.path.splitext(os.path.basename(corpus))[0]
+    corpus_name_2 = os.path.splitext(os.path.basename(corpus2))[0]
     output_dir = f"{OUTPUT_ROOT}/{corpus_name}/summarytype_{summary_type}"
+    output_dir_2 = f"{OUTPUT_ROOT}/{corpus_name_2}/summarytype_{summary_type}"
     os.makedirs(output_dir, exist_ok=True)
+    os.makedirs(output_dir_2, exist_ok=True)
     summaries_dir = f"{output_dir}/summaries"
+    summaries_dir_2 = f"{output_dir_2}/summaries"
     character_definitions_dir = f"{output_dir}/character_definitions"
+    character_definitions_dir_2 = f"{output_dir_2}/character_definitions"
     os.makedirs(character_definitions_dir, exist_ok=True)
-
+    os.makedirs(character_definitions_dir_2, exist_ok=True)
     # load docs
     docs = load_docs(corpus_path=corpus, chunk_size=2048, chunk_overlap=64)
     docs_2 = load_docs(corpus_path=corpus2, chunk_size=2048, chunk_overlap=64)
+    
     # generate summaries
     corpus_summaries = get_corpus_summaries(
         docs=docs, summary_type=summary_type, cache_dir=summaries_dir
     )
     corpus_summaries_2 = get_corpus_summaries(
-        docs=docs_2, summary_type=summary_type, cache_dir=summaries_dir
+        docs=docs_2, summary_type=summary_type, cache_dir=summaries_dir_2
     )
 
     # get character definition
@@ -132,7 +138,7 @@ def main():
     elif args.interface == "streamlit":
         chatbot = st.cache_resource(create_chatbot)(
             args.corpus,
-            args.corpus2
+            args.corpus2,
             args.character_name,
             args.character_name_2,
             args.chatbot_type,
