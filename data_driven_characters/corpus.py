@@ -1,8 +1,9 @@
 import json
 import os
 
-from langchain import PromptTemplate, LLMChain
-from langchain.chat_models import ChatOpenAI
+from langchain.chains import LLMChain
+from langchain_core.prompts import PromptTemplate
+from langchain_anthropic import ChatAnthropic
 from langchain.chains.summarize import load_summarize_chain
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 
@@ -29,7 +30,7 @@ def load_docs(corpus_path, chunk_size, chunk_overlap):
 
 def generate_corpus_summaries(docs, summary_type="map_reduce"):
     """Generate summaries of the story."""
-    GPT3 = ChatOpenAI(model_name="gpt-3.5-turbo")
+    GPT3 = ChatAnthropic(temperature=0, model_name="claude-3-opus-20240229")
     chain = load_summarize_chain(
         GPT3, chain_type=summary_type, return_intermediate_steps=True, verbose=True
     )
@@ -60,7 +61,7 @@ def get_corpus_summaries(docs, summary_type, cache_dir, force_refresh=False):
 
 def generate_characters(corpus_summaries, num_characters):
     """Get a list of characters from a list of summaries."""
-    GPT4 = ChatOpenAI(model_name="gpt-4")
+    GPT4 = ChatAnthropic(temperature=0, model_name="claude-3-opus-20240229")
     characters_prompt_template = """Consider the following corpus.
     ---
     {corpus_summaries}

@@ -2,8 +2,9 @@ from dataclasses import dataclass, asdict
 import json
 import os
 
-from langchain.chat_models import ChatOpenAI
-from langchain import PromptTemplate, LLMChain
+from langchain_anthropic import ChatAnthropic
+from langchain.chains import LLMChain
+from langchain_core.prompts import PromptTemplate
 
 from data_driven_characters.chains import FitCharLimit, define_description_chain
 
@@ -27,7 +28,7 @@ def generate_character_ai_description(name, corpus_summaries, char_limit):
     lower_limit = char_limit - 10 ** (order_of_magnitude(char_limit))
 
     description_chain = define_description_chain()
-    GPT4 = ChatOpenAI(model_name="gpt-4")
+    GPT4 = ChatAnthropic(temperature=0, model_name="claude-3-opus-20240229")
     char_limit_chain = FitCharLimit(
         chain=description_chain,
         character_range=(lower_limit, char_limit),
@@ -59,7 +60,7 @@ Long description:
 Generate a greeting that {name} would say to someone they just met, without quotations.
 This greeting should reflect their personality.
 """
-    GPT3 = ChatOpenAI(model_name="gpt-3.5-turbo")
+    GPT3 = ChatAnthropic(temperature=0, model_name="claude-3-opus-20240229")
     greeting = LLMChain(
         llm=GPT3, prompt=PromptTemplate.from_template(greeting_template)
     ).run(

@@ -2,14 +2,14 @@ import faiss
 from tqdm import tqdm
 
 from langchain.chains import ConversationChain
-from langchain.chat_models import ChatOpenAI
+from langchain_anthropic import ChatAnthropic
 from langchain.docstore import InMemoryDocstore
 from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.memory import (
     ConversationBufferMemory,
     CombinedMemory,
 )
-from langchain.prompts import PromptTemplate
+from langchain_core.prompts import PromptTemplate
 from langchain.vectorstores import FAISS
 
 from data_driven_characters.memory import ConversationVectorStoreRetrieverMemory
@@ -71,7 +71,7 @@ Current conversation:
 Human: {{{self.input_key}}}
 {character_definition.name}:"""
         )
-        GPT3 = ChatOpenAI(model_name="gpt-3.5-turbo")
+        GPT3 = ChatAnthropic(temperature=0, model_name="claude-3-opus-20240229")
         chatbot = ConversationChain(
             llm=GPT3, verbose=True, memory=memory, prompt=prompt
         )

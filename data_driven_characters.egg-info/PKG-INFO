@@ -1,0 +1,12 @@
+Metadata-Version: 2.1
+Name: data-driven-characters
+Version: 0.1
+License-File: LICENSE
+Requires-Dist: faiss-cpu
+Requires-Dist: langchain
+Requires-Dist: loguru
+Requires-Dist: notebook
+Requires-Dist: openai
+Requires-Dist: streamlit_chat
+Requires-Dist: tiktoken
+Requires-Dist: tqdm
