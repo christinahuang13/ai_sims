@@ -20,7 +20,7 @@ from data_driven_characters.interfaces import CommandLine, Streamlit
 OUTPUT_ROOT = "output"
 
 
-def create_chatbot(corpus, character_name, character_name_2, chatbot_type, retrieval_docs, summary_type):
+def create_chatbot(corpus, corpus2, character_name, character_name_2, chatbot_type, retrieval_docs, summary_type):
     # logging
     corpus_name = os.path.splitext(os.path.basename(corpus))[0]
     output_dir = f"{OUTPUT_ROOT}/{corpus_name}/summarytype_{summary_type}"
@@ -31,10 +31,13 @@ def create_chatbot(corpus, character_name, character_name_2, chatbot_type, retri
 
     # load docs
     docs = load_docs(corpus_path=corpus, chunk_size=2048, chunk_overlap=64)
-
+    docs_2 = load_docs(corpus_path=corpus2, chunk_size=2048, chunk_overlap=64)
     # generate summaries
     corpus_summaries = get_corpus_summaries(
         docs=docs, summary_type=summary_type, cache_dir=summaries_dir
+    )
+    corpus_summaries_2 = get_corpus_summaries(
+        docs=docs_2, summary_type=summary_type, cache_dir=summaries_dir
     )
 
     # get character definition
@@ -46,11 +49,11 @@ def create_chatbot(corpus, character_name, character_name_2, chatbot_type, retri
 
     character_definition_2 = get_character_definition(
         name=character_name_2,
-        corpus_summaries=corpus_summaries,
+        corpus_summaries=corpus_summaries_2,
         cache_dir=character_definitions_dir,
     )
     print(json.dumps(asdict(character_definition), indent=4))
-
+    print(json.dumps(asdict(character_definition_2), indent=4))
     # construct retrieval documents
     if retrieval_docs == "raw":
         documents = [
@@ -59,6 +62,7 @@ def create_chatbot(corpus, character_name, character_name_2, chatbot_type, retri
         ]
     elif retrieval_docs == "summarized":
         documents = corpus_summaries
+        documents_2 = corpus_summaries_2
     else:
         raise ValueError(f"Unknown retrieval docs type: {retrieval_docs}")
 
@@ -70,6 +74,7 @@ def create_chatbot(corpus, character_name, character_name_2, chatbot_type, retri
             character_definition=character_definition,
             character_definition_2=character_definition_2,
             documents=documents,
+            documents_2=documents_2
         )
     elif chatbot_type == "summary_retrieval":
         chatbot = SummaryRetrievalChatBot(
@@ -86,8 +91,11 @@ def main():
     parser.add_argument(
         "--corpus", type=str, default="data/everything_everywhere_all_at_once.txt"
     )
+    parser.add_argument(
+        "--corpus2", type=str, default="data/thor_love_and_thunder.txt"
+    )
     parser.add_argument("--character_name", type=str, default="Evelyn")
-    parser.add_argument("--character_name_2", type=str, default="Waymond")
+    parser.add_argument("--character_name_2", type=str, default="Thor")
     parser.add_argument(
         "--chatbot_type",
         type=str,
@@ -124,6 +132,7 @@ def main():
     elif args.interface == "streamlit":
         chatbot = st.cache_resource(create_chatbot)(
             args.corpus,
+            args.corpus2
             args.character_name,
             args.character_name_2,
             args.chatbot_type,

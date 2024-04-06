@@ -16,7 +16,7 @@ from data_driven_characters.memory import ConversationVectorStoreRetrieverMemory
 
 
 class RetrievalChatBot:
-    def __init__(self, character_definition, character_definition_2, documents):
+    def __init__(self, character_definition, character_definition_2, documents, documents_2):
         print("TESTINGSTRING123")
         print(character_definition)
         self.character_definition = character_definition
@@ -24,19 +24,20 @@ class RetrievalChatBot:
         print("PRINTING NEW DEFINITION")
         print(character_definition_2)
         self.documents = documents
+        self.documents_2 = documents_2
         self.num_context_memories = 10
         # true if character1, false if character2
-        self.current = true
+        self.current = True
         self.chat_history_key = "chat_history"
         self.context_key = "context"
         self.input_key = "input"
 
-        self.chain_1 = self.create_chain(character_definition, character_definition_2)
-        self.chain_2 = self.create_chain(character_definition_2, character_definition)
+        self.chain_1 = self.create_chain(character_definition, character_definition_2, documents)
+        self.chain_2 = self.create_chain(character_definition_2, character_definition, documents_2)
 
 
 
-    def create_chain(self, character_definition, character_definition_2):
+    def create_chain(self, character_definition, character_definition_2, documents):
 
         conv_memory = ConversationBufferMemory(
             memory_key=self.chat_history_key, input_key=self.input_key
@@ -53,8 +54,9 @@ class RetrievalChatBot:
             output_prefix=character_definition.name,
             blacklist=[self.chat_history_key],
         )
+
         # add the documents to the context memory
-        for i, summary in tqdm(enumerate(self.documents)):
+        for i, summary in tqdm(enumerate(documents)):
             context_memory.save_context(inputs={}, outputs={f"[{i}]": summary})
 
         # Combined
