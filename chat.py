@@ -120,8 +120,8 @@ def main():
             args.retrieval_docs,
             args.summary_type,
         )
-        st.title("Data Driven Characters")
-        st.write("Create your own character chatbots, grounded in existing corpora.")
+        st.title("AI SIMS")
+        st.write("Create your own sims groupchats, grounded in existing corpora.")
         st.divider()
         st.markdown(f"**chatbot type**: *{args.chatbot_type}*")
         if "retrieval" in args.chatbot_type:
