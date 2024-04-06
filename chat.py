@@ -20,7 +20,7 @@ from data_driven_characters.interfaces import CommandLine, Streamlit
 OUTPUT_ROOT = "output"
 
 
-def create_chatbot(corpus, character_name, chatbot_type, retrieval_docs, summary_type):
+def create_chatbot(corpus, character_name, character_name_2, chatbot_type, retrieval_docs, summary_type):
     # logging
     corpus_name = os.path.splitext(os.path.basename(corpus))[0]
     output_dir = f"{OUTPUT_ROOT}/{corpus_name}/summarytype_{summary_type}"
@@ -43,6 +43,12 @@ def create_chatbot(corpus, character_name, chatbot_type, retrieval_docs, summary
         corpus_summaries=corpus_summaries,
         cache_dir=character_definitions_dir,
     )
+
+    character_definition_2 = get_character_definition(
+        name=character_name_2,
+        corpus_summaries=corpus_summaries,
+        cache_dir=character_definitions_dir,
+    )
     print(json.dumps(asdict(character_definition), indent=4))
 
     # construct retrieval documents
@@ -62,6 +68,7 @@ def create_chatbot(corpus, character_name, chatbot_type, retrieval_docs, summary
     elif chatbot_type == "retrieval":
         chatbot = RetrievalChatBot(
             character_definition=character_definition,
+            character_definition_2=character_definition_2,
             documents=documents,
         )
     elif chatbot_type == "summary_retrieval":
@@ -80,6 +87,7 @@ def main():
         "--corpus", type=str, default="data/everything_everywhere_all_at_once.txt"
     )
     parser.add_argument("--character_name", type=str, default="Evelyn")
+    parser.add_argument("--character_name_2", type=str, default="Waymond")
     parser.add_argument(
         "--chatbot_type",
         type=str,
@@ -107,6 +115,7 @@ def main():
         chatbot = create_chatbot(
             args.corpus,
             args.character_name,
+            args.character_name_2,
             args.chatbot_type,
             args.retrieval_docs,
             args.summary_type,
@@ -116,6 +125,7 @@ def main():
         chatbot = st.cache_resource(create_chatbot)(
             args.corpus,
             args.character_name,
+            args.character_name_2,
             args.chatbot_type,
             args.retrieval_docs,
             args.summary_type,
