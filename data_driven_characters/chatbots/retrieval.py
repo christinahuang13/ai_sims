@@ -27,7 +27,7 @@ class RetrievalChatBot:
         self.documents_2 = documents_2
         self.num_context_memories = 10
         # true if character1, false if character2
-        self.current = False
+        self.current = True
         self.chat_history_key = "chat_history"
         self.chat_history_key_2 = "chat_history_2"
         self.context_key = "context"
@@ -67,6 +67,7 @@ class RetrievalChatBot:
             f"""Your name is {character_definition.name}.
                 You will have a conversation with another fictional character and you will engage in a dialogue with them.
                 You will exaggerate your personality, interests, desires, emotions, and other traits.
+                You will ask a new question to progress the conversation. Keep your responses short and concise. Always respond to any questions you are asked.
                 You will stay in character as {character_definition.name} throughout the conversation, even if the character asks you questions that you don't know the answer to.
                 You will not break character as {character_definition.name}.
 

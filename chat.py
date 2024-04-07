@@ -145,12 +145,12 @@ def main():
             args.retrieval_docs,
             args.summary_type,
         )
-        st.title("AI SIMS")
+        st.title("MULTIVERSE HANGOUTS")
         st.write("Create your own sims groupchats, grounded in existing corpora.")
         st.divider()
-        st.markdown(f"**chatbot type**: *{args.chatbot_type}*")
-        if "retrieval" in args.chatbot_type:
-            st.markdown(f"**retrieving from**: *{args.retrieval_docs} corpus*")
+        # st.markdown(f"**chatbot type**: *{args.chatbot_type}*")
+        # if "retrieval" in args.chatbot_type:
+        #     st.markdown(f"**retrieving from**: *{args.retrieval_docs} corpus*")
         app = Streamlit(chatbot=chatbot)
     else:
         raise ValueError(f"Unknown interface: {args.interface}")

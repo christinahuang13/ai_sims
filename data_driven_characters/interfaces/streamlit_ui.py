@@ -16,8 +16,8 @@ def clear_user_input():
 def converse(chatbot):
     left, right = st.columns([4, 1])
     user_input = left.text_input(
-        label=f"Chat with {chatbot.character_definition.name}",
-        placeholder=f"Chat with {chatbot.character_definition.name}",
+        label=f"Chat with {chatbot.character_definition.name}, {chatbot.character_definition_2.name}",
+        placeholder=f"Chat with {chatbot.character_definition.name}, {chatbot.character_definition_2.name}",
         label_visibility="collapsed",
         key="user_input",
     )
@@ -56,7 +56,7 @@ def converse(chatbot):
         )
         message(user_input, is_user=True, key=key)
         with st.spinner(f"They are thinking..."):
-            response, character = chatbot.step(user_input, True)
+            response = chatbot.step(user_input, True)
             print("ICECREAMRESPONSE")
             print(response)
         key = len(st.session_state.messages)
